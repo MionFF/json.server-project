@@ -1,0 +1,546 @@
+        /* Обнуляем box-sizing для всех элементов — теперь padding и border не увеличивают размер элемента */
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Основные стили для body — убираем отступы, задаём шрифт и делаем layout flex-контейнером */
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            /* теперь дочерние элементы будут располагаться в ряд */
+            height: 100vh;
+            /* занимаем всю высоту экрана */
+        }
+
+        /* Контейнер, в котором лежат обе секции (посты и форма) */
+        .container {
+            display: flex;
+            /* секции будут идти в ряд */
+            width: 100%;
+            padding: 20px;
+            gap: 20px;
+            /* отступ между постами и формой */
+        }
+
+        /* Секция с постами */
+        .posts-section {
+            flex: 2;
+            /* занимает больше пространства */
+            overflow-y: auto;
+            /* прокрутка, если много контента */
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            /* скруглённые углы */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            /* лёгкая тень */
+            max-height: 100%;
+        }
+
+        /* Секция с формой */
+        .form-section {
+            flex: 1;
+            /* занимает меньше пространства */
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            /* расстояние между input и кнопкой */
+            max-height: 100%;
+        }
+
+        h1,
+        h2 {
+            margin-top: 0;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            /* тонкая граница между постами */
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        /* При редактировании поста он подсвечивается жёлтым фоном */
+        li.editing {
+            background-color: #fff3cd;
+            /* светло-жёлтый */
+            border-radius: 8px;
+        }
+
+        /* Стили для кнопок */
+        button {
+            padding: 6px 12px;
+            font-size: 14px;
+            border: none;
+            border-radius: 4px;
+            background-color: #6366f1;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #4f46e5;
+        }
+
+        /* Стили для input и select, с учётом твоих изменений */
+        input,
+        select {
+            padding: 8px;
+            margin-top: 6px;
+            font-size: 14px;
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        /* Подсветка при фокусе */
+        input:focus,
+        select:focus {
+            border-color: #6366f1;
+        }
+
+        /* Отдельный отступ снизу у поля поиска */
+        #searchInput { margin-bottom: 10px; }
+
+        /* Заголовок поста — жирный и занимает больше места */
+        .post-title {
+            font-weight: 600;
+            flex: 1;
+        }
+
+        /* Тело поста — серый цвет и побольше места */
+        .post-body {
+            flex: 2;
+            color: #4b5563;
+        }
+
+        /* Дата поста */
+        .post-date {
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 0.3em;
+        }
+
+        /* Обёртка для кнопок — чтобы они шли рядом и с отступом */
+        .post-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-top: 10px;
+        }
+
+        .input-group input,
+        .input-group select {
+            /* Добавляем select в общие стили */
+            padding: 14px 10px 6px;
+            font-size: 14px;
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.2s;
+            background-color: white;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            /* Добавляем select в focus */
+            border-color: #6366f1;
+        }
+
+        .input-group label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #9ca3af;
+            font-size: 14px;
+            pointer-events: none;
+            transition: 0.2s ease all;
+            background-color: white;
+            padding: 0 4px;
+            z-index: 1;
+            /* Чтобы label не перекрывался бордером */
+        }
+
+        /* Эффект всплывающего label */
+        .input-group input:focus+label,
+        .input-group input:not(:placeholder-shown)+label,
+        .input-group input:valid+label,
+        .input-group select:focus+label,
+        .input-group select:valid+label {
+            /* Объединяем условия для select */
+            top: -8px;
+            left: 8px;
+            font-size: 12px;
+            color: #6366f1;
+            background-color: white;
+            /* Фиксим фон при поднятии */
+            z-index: 1;
+            /* Убедимся, что label над бордером */
+        }
+
+        /* Вернём подсветку выбранной опции в select */
+        .input-group select option:checked {
+            background-color: #ededed;
+            /* Серый фон */
+            color: #000;
+            /* Чёрный текст */
+        }
+
+        /* Анимация постов */
+        li {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Анимация удаления поста */
+        @keyframes fadeOutCollapse {
+            0% {
+                opacity: 1;
+                height: 60px;
+                /* или реальная высота поста */
+                margin-bottom: 10px;
+                /* или сколько у тебя */
+                padding: 10px;
+                /* если есть padding */
+            }
+    
+            100% {
+                opacity: 0;
+                height: 0;
+                margin-bottom: 0;
+                padding: 0;
+            }
+        }
+    
+        /* Новый класс для исчезновения с "схлопыванием" */
+        li.fade-out {
+            overflow: hidden;
+            /* Чтобы внутренности не вылезали при уменьшении */
+            animation: fadeOutCollapse 0.3s ease forwards;
+        }
+
+        /* Плавная анимация для постов */
+        li {
+            transition: box-shadow 0.3s ease, border 0.3s ease;
+        }
+
+        /* Эффект при наведении + редактировании */
+        li:hover,
+        li.editing {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            border: 1px solid #7c3aed;
+        }
+
+        /* Микроанимации для кнопок */
+        .edit-btn {
+            transition: transform 0.2s ease, background-color 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease; /* Плавные переходы */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .delete-btn {
+            transition: transform 0.2s ease, background-color 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease; /* Плавные переходы */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Анимация при наведении */
+        .edit-btn:hover {
+            background-color: #6a5acd;
+            transform: scale(1.06);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .delete-btn:hover {
+            background-color: #dc143c;
+            transform: scale(1.06);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Анимация появления кнопки отмены "всплытие" */
+        .cancel-btn {
+            opacity: 0;
+            transform: translateY(10px) scale(1); /* <-- Объединяем в один transform */
+            transition: transform 0.3s ease, background-color 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    
+        .cancel-btn.appear {
+            opacity: 1;
+            transform: translateY(0) scale(1); /* <-- Всё ещё scale(1), но теперь совместно с translateY */
+        }
+
+        .cancel-btn.disappear {
+            opacity: 0;
+            transform: translateY(10) scale(0.95);
+            transition: transform 0.3s ease, opacity 0.3s;
+        }
+    
+        .cancel-btn:hover {
+            background-color: #6a5acd;
+            transform: translateY(0) scale(1.06); /* <-- scale + translateY одновременно */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        
+        
+        /* Анимация "пружинки" */
+        @keyframes bounce-click {
+            0% {
+                transform: scale(1);
+            }
+            30% {
+                transform: scale(0.95);
+            }
+            50% {
+                transform: scale(1.07);
+            }
+            70% {
+                transform: scale(0.96);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .bouncing {
+            animation: bounce-click 0.4s ease;
+        }
+
+
+
+        /* Цвет у активной выбранной опции */
+        select option:checked {
+            color: #111827
+        }
+
+        select option[disabled][hidden] {
+            color: #9ca3af;
+        }
+
+        /* Добавление сообщений */
+        /* Контейнер для всех сообщений - позиционируется фиксированно в правом верхнем углу */
+        #messageContainer {
+            position: fixed;
+            top: 20px;
+            /* Отступ сверху */
+            right: 20px;
+            /* Отступ справа */
+            display: flex;
+            flex-direction: column;
+            /* Сообщения идут вертикально */
+            gap: 10px;
+            z-index: 1000;
+            max-width: 300px;
+            /* Максимальная ширина, чтобы сообщения не растягивались */
+            width: 100%;
+            /* Занимает всю доступную ширину (до max-width) */
+        }
+
+        /* Базовые стили для сообщения */
+        .message {
+            padding: 12px 16px;
+            margin: 4px 0;
+            border-radius: 6px;
+            font-size: 14px;
+            color: white;
+            background-color: #4b5563;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            /* Тень для эффекта "всплытия" */
+
+            /* Начальное состояние - невидимо и смещено вверх */
+            opacity: 0;
+            transform: translateY(-20px);
+            /* Смещено на 20px вверх */
+            
+            /* Плавные анимации для появления/исчезновения */
+            transition: all 0.3s ease;
+            /* Плавное перемещение */
+
+            /* Для красивого переноса длинного текста */
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+
+            /* Небольшой апгрейд */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Состояние "показано" - применяется через JavaScript */
+        .message.show { opacity: 1; transform: translateY(0); }
+        /* Возвращаем на исходную позицию */
+
+        /* Состояние "скрыто" - применяется перед удалением */
+        .message.hide { opacity: 0; transform: translateY(-20px); }
+        /* Смещаем вверх */
+
+        /* Цвета по типу сообщения */
+        .message.success { background-color: #10b981; } /* Зеленый цвет */
+        .message.error { background-color: #ef4444; } /* Красный цвет */
+        .message.warning { background-color: #f59e0b; } /* Оранжевый для предупреждений */
+        .message.info { background-color: #3b82f6; } /* Синий для информационных */
+
+        /* Стили для кнопки "Отменить" */
+        .cancel-btn {
+            background-color: #9ca3af;
+            color: white;
+        }
+            
+        .post-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            /* все кнопки справа */
+        }
+    
+        /* Убедимся, что все кнопки внутри .post-buttons выравниваются одинаково */
+        .post-buttons button { flex-shrink: 0; }
+
+        .message-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            /* Отступ между текстом и кнопкой */
+            flex-wrap: wrap;
+        }
+    
+        .message-content button {
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* (Опционально) Для восстановления */
+        .undo-wrapper {
+            width: 100%;
+            text-align: right;
+            margin-top: 8px;
+        }
+
+            /* Адаптация под устройства */
+        @media (max-width: 768px) {
+    
+            .form-section input,
+            .form-section select,
+            .form-section button,
+            .form-section textarea,
+            .controls input,
+            .controls select,
+            .controls button {
+                width: 100%;
+                box-sizing: border-box;
+                /* Чтобы padding не ломал ширину */
+                margin-bottom: 10px;
+                /* Немного отступа между элементами */
+            }
+    
+            .form-section,
+            .post-list-section {
+                padding: 10px;
+            }
+        }
+
+        /* Обёртка для поля поиска */
+        .search-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+    
+        .search-wrapper input {
+            width: 100%;
+            padding: 10px 30px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+    
+        /* Метка (label) — фиолетовая, как у других полей */
+        .search-wrapper label {
+            position: absolute;
+            top: -8px;
+            left: 30px;
+            font-size: 0.8em;
+            color: #7f4cc4;
+            /* фиолетовый цвет */
+            background: white;
+            padding: 0 4px;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+    
+        /* SVG-иконка лупы */
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            width: 16px;
+            height: 16px;
+            color: #999;
+            pointer-events: none;
+        }
+    
+        /* SVG-иконка крестика (очистка) */
+        .clear-icon {
+            position: absolute;
+            right: 10px;
+            width: 16px;
+            height: 16px;
+            color: #999;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.6);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+    
+        /* Показываем крестик, если есть текст */
+        .search-wrapper input:not(:placeholder-shown) ~ .clear-icon {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+    
+        /* Hover-эффект */
+        .clear-icon:hover {
+            color: #5b2dac;
+            /* немного темнее */
+        }
+
+        /* Стили для выделенного текста */
+        mark {
+            background: none;
+            color: #7c3aed;
+            border-bottom: 2px dashed #a78bfa;
+            font-weight: bold;
+        }
