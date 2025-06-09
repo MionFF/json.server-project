@@ -8,3 +8,6 @@ Okay, now I need to restore my database... Probably I did it correctly. Now it n
 
 I did cringe commit XD
 I just forgot about script tag in index.html to link it up with main.js XD
+
+
+HERE'S TEXT FROM "TEST" BRANCH
