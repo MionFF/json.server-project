@@ -3,6 +3,7 @@
 const inputField = document.getElementById("inputField");
 const greetBtn = document.getElementById("greetBtn");
 const clearBtn = document.getElementById("clearBtn");
+const dateBtn = document.getElementById("dateBtn");
 
 function clearInput() {
     inputField.value = "";
@@ -21,3 +22,9 @@ greetBtn.addEventListener("click", () => {
 });
 
 clearBtn.addEventListener("click", clearInput);
+
+dateBtn.addEventListener("click", () => {
+    const now = new Date().toLocaleDateString();
+    console.log(`Today's date: ${now}`);
+    alert(`Today's date: ${now}`);
+});
