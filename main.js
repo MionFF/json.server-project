@@ -389,20 +389,41 @@ document.getElementById('clearSearch').addEventListener('click', () => {
     input.dispatchEvent(new Event('input')); // чтобы сработал фильтр
 });
 
-searchInput.addEventListener("input", () => {
+
+// Функция Debounce для оптимизации при поиске
+const debounce = (fn, delay) => {
+    let timeout;
+    return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            fn.apply(this, args)
+        }, delay)
+    };
+};
+
+
+const handleSearchInput = debounce(() => {
     localStorage.setItem("searchQuery", searchInput.value);
     applyFiltersAndSort();
+}, 200)
+
+// Очистка поля поиска
+document.getElementById('clearSearch').addEventListener('click', () => {
+    searchInput.value = '';
+    handleSearchInput(); // Вызываем обработчик напрямую
 });
 
 document.addEventListener("DOMContentLoaded", () => {
     const savedQuery = localStorage.getItem("searchQuery");
     if (savedQuery !== null) {
         searchInput.value = savedQuery;
+        // Применяем фильтры сразу для сохраненного запроса
+        applyFiltersAndSort();
     }
 });
 
 // Загрузка постов при инициализации
-searchInput.addEventListener("input", applyFiltersAndSort);
+searchInput.addEventListener("input", handleSearchInput);
 sortSelect.addEventListener("change", applyFiltersAndSort);
 
 // Слушатели событий для поиска и сортировки
