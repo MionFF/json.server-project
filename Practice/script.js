@@ -28,3 +28,10 @@ dateBtn.addEventListener("click", () => {
     console.log(`Today's date: ${now}`);
     alert(`Today's date: ${now}`);
 });
+
+
+function multiply(a, b) {
+    return a * b;
+}
+
+console.log(multiply(6, 10));
