@@ -34,11 +34,7 @@ function addition(a, b) {
     return a + b;
 }
 
-console.log(addition(6, 10));
-
 
 function multiply(a, b) {
     return a * b;
 }
-
-console.log(multiply(6, 10));
